@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Button, List, Typography, Input } from 'antd';
+import { Avatar, Button, List, Typography } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../hook/hook';
 import {
   ContactItem,
@@ -8,24 +8,26 @@ import {
   selectContactList,
   selectContactStatus,
 } from '../../redux/slices/contact/contactSlice';
-
-import './ContactList.css';
 import AddForm from './AddForm/AddForm';
 import EditForm from './EditForm/EditForm';
+import SearchForm from './SearchForm/SearchForm';
 
-const { Search } = Input;
+import './ContactList.css';
+
 const { Title } = Typography;
 
 const ContactList: React.FC = () => {
+  const dispatch = useAppDispatch();
+
+  const contactList = useAppSelector(selectContactList);
+  const [filteredList, setFiltered] = useState<ContactItem[]>([])
+  const [isFiltering, setIsFiltering] = useState(false);
+
+  const status = useAppSelector(selectContactStatus);
 
   const [isAddFormVisible, setIsAddFormVisible] = useState(false);
   const [isEditFormVisible, setIsEditFormVisible] = useState(false)
   const [selectedContact, setSelectedContact] = useState<ContactItem | null>(null)
-
-  const contactList = useAppSelector(selectContactList);
-  const status = useAppSelector(selectContactStatus);
-
-  const dispatch = useAppDispatch();
 
   const showAddForm = () => setIsAddFormVisible(true);
   const hideAddForm = () => setIsAddFormVisible(false);
@@ -35,10 +37,6 @@ const ContactList: React.FC = () => {
     setSelectedContact(contactItem)
   }
   const hideEditForm = () => setIsEditFormVisible(false);
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value);
-  };
 
   const handleDeletion = (id: string) => {
     dispatch(deleteContact(id));
@@ -51,16 +49,11 @@ const ContactList: React.FC = () => {
   return (
     <div className="contactList">
       <Title>Список контактов</Title>
-      <Search
-        className="contactSearch"
-        placeholder="Найти контакты"
-        onChange={handleChange}
-        enterButton
-      />
+      <SearchForm setFiltered={setFiltered} setIsFiltering={setIsFiltering} />
       <List
         bordered
         itemLayout="horizontal"
-        dataSource={contactList}
+        dataSource={isFiltering ? filteredList : contactList}
         loading={status === 'loading'}
         renderItem={(contact) => (
           <List.Item
