@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Avatar, Button, List, Typography, Input } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../hook/hook';
 import {
+  ContactItem,
   deleteContact,
   fetchContacts,
   selectContactList,
@@ -10,6 +11,7 @@ import {
 
 import './ContactList.css';
 import AddForm from './AddForm/AddForm';
+import EditForm from './EditForm/EditForm';
 
 const { Search } = Input;
 const { Title } = Typography;
@@ -17,6 +19,8 @@ const { Title } = Typography;
 const ContactList: React.FC = () => {
 
   const [isAddFormVisible, setIsAddFormVisible] = useState(false);
+  const [isEditFormVisible, setIsEditFormVisible] = useState(false)
+  const [selectedContact, setSelectedContact] = useState<ContactItem | null>(null)
 
   const contactList = useAppSelector(selectContactList);
   const status = useAppSelector(selectContactStatus);
@@ -25,6 +29,12 @@ const ContactList: React.FC = () => {
 
   const showAddForm = () => setIsAddFormVisible(true);
   const hideAddForm = () => setIsAddFormVisible(false);
+
+  const showEditForm = (contactItem: ContactItem) => {
+    setIsEditFormVisible(true);
+    setSelectedContact(contactItem)
+  }
+  const hideEditForm = () => setIsEditFormVisible(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log(event.target.value);
@@ -55,7 +65,7 @@ const ContactList: React.FC = () => {
         renderItem={(contact) => (
           <List.Item
             actions={[
-              <Button key="list-loadmore-edit">edit</Button>,
+              <Button onClick={() => showEditForm(contact)} key="list-loadmore-edit">edit</Button>,
               <Button onClick={() => handleDeletion(contact.id)} key="list-loadmore-more" danger>
                 delete
               </Button>,
@@ -73,7 +83,19 @@ const ContactList: React.FC = () => {
         Добавить новый контакт
       </Button>
 
-      {isAddFormVisible && <AddForm isAddFormVisible={isAddFormVisible} hideAddForm={hideAddForm} />}
+      {isAddFormVisible && (
+        <AddForm 
+          isAddFormVisible={isAddFormVisible} 
+          hideAddForm={hideAddForm} 
+        />
+      )}
+      {isEditFormVisible && (
+        <EditForm
+          isEditFormVisible={isEditFormVisible}
+          hideEditForm={hideEditForm}
+          selectedContact={selectedContact}
+        />
+      )}
     </div>
   );
 };

@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { CONTACTS_URL } from "../../../utils/constants";
 import { RootState } from "../../store";
 
-type ContactItem = {
+export type ContactItem = {
   id: string;
   name: string;
   phone: string;
