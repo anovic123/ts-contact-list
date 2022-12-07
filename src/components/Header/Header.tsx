@@ -1,17 +1,20 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import { LogoutOutlined } from '@ant-design/icons';
-import { useAppDispatch } from '../../hook/hook';
+import { useAppDispatch, useAppSelector } from '../../hook/hook';
+import { MyRoutes } from '../../utils/constants';
 import { logOut } from '../../redux/slices/auth/authSlice';
-import { useNavigate } from 'react-router-dom';
 
 import s from './Header.module.css';
-import { MyRoutes } from '../../utils/constants';
+import { selectUserData } from '../../redux/slices/user/userSlice';
 
 const Header: React.FC = () => {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const userData = useAppSelector(selectUserData)
 
   const handleLogout = () => {
     dispatch(logOut())
@@ -21,7 +24,7 @@ const Header: React.FC = () => {
   return (
     <header className={s.header}>
       <div>
-        <span>Пользователь, </span>
+        <span>{userData?.username}, </span>
         <Button 
           type="primary" 
           icon={<LogoutOutlined />}
