@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Form, Input, Modal } from 'antd';
-import { useAppSelector } from '../../../hook/hook';
-import { selectContactStatus } from '../../../redux/slices/contact/contactSlice';
+import { useAppDispatch, useAppSelector } from '../../../hook/hook';
+import { addContact, selectContactStatus } from '../../../redux/slices/contact/contactSlice';
 import { UserOutlined } from '@ant-design/icons';
 
 type AddFormValue = {
@@ -15,9 +15,13 @@ type Props = {
 };
 
 const AddForm = ({ isAddFormVisible, hideAddForm }: Props) => {
-  const onFinish = async ({ name, phone }: AddFormValue) => {};
-
   const status = useAppSelector(selectContactStatus);
+  const dispatch = useAppDispatch();
+
+  const onFinish = async ({ name, phone }: AddFormValue) => {
+    await dispatch(addContact({ name, phone }));
+    hideAddForm();
+  };
 
   return (
     <Modal
@@ -36,7 +40,7 @@ const AddForm = ({ isAddFormVisible, hideAddForm }: Props) => {
         </Form.Item>
 
         <Form.Item
-          name="name"
+          name="phone"
           rules={[{ required: true, message: 'Пожалуйста введите номер телефона' }]}
         >
           <Input
