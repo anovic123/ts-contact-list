@@ -1,9 +1,13 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Typography } from 'antd';
+import { Alert, Button, Form, Input, Typography } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hook/hook';
 import { logIn } from '../../redux/slices/auth/authSlice';
-import { fetchUsers, selectUserStatus } from '../../redux/slices/user/userSlice';
+import { 
+  fetchUsers, 
+  selectUserStatus,
+  selectUserError 
+} from '../../redux/slices/user/userSlice';
 import { MyRoutes } from '../../utils/constants';
 import './Login.css';
 
@@ -16,6 +20,7 @@ type LoginValues = {
 const Login = () => {
 
   const status = useAppSelector(selectUserStatus);
+  const error = useAppSelector(selectUserError);
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -65,7 +70,7 @@ const Login = () => {
         </Button>
       </Form.Item>
 
-      {/* {status === 'error' && <Alert message="Такого пользователя не существует" type="error" />} */}
+      {error && <Alert message={error} type="error" />}
     </Form>
   );
 };
