@@ -26,7 +26,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
   const onFinish = async ({ userName }: LoginValues) => {
     setIsLoading(true);
@@ -40,8 +40,8 @@ const Login = () => {
       setError('Такого пользователя не существует');
     } else {
       setError('');
-      dispatch(logIn)
-      // navigate(MyRoutes.Contacts);
+      dispatch(logIn());
+      navigate(MyRoutes.Contacts);
     }
 
     setIsLoading(false);

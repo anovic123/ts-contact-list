@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 
 export type AuthState = {
@@ -25,6 +25,6 @@ export const authSlice = createSlice({
 });
 
 export const selectIsLoggedIn = (state: RootState) => state.auth.isLoggedIn;
-export const { logIn } = authSlice.actions;
+export const { logIn, logOut } = authSlice.actions;
 
 export default authSlice.reducer;

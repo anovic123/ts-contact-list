@@ -30,7 +30,12 @@ const ContactList: React.FC = () => {
   return (
     <div className="contactList">
       <Title>Список контактов</Title>
-      <Search className="contactSearch" placeholder="Найти контакты" onChange={handleChange} enterButton />
+      <Search
+        className="contactSearch"
+        placeholder="Найти контакты"
+        onChange={handleChange}
+        enterButton
+      />
       <List
         bordered
         itemLayout="horizontal"
