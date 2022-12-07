@@ -26,6 +26,16 @@ export const fetchContacts = createAsyncThunk(
   }
 )
 
+export const deleteContact = createAsyncThunk(
+  'contact/deleteContact',
+  async (id: string) => {
+    await fetch(`${CONTACTS_URL}/${id}`, {
+      method: 'DELETE'
+    })
+    return id;
+  }
+)
+
 export const contactSlice = createSlice({
   name: 'contact',
   initialState,
@@ -37,15 +47,30 @@ export const contactSlice = createSlice({
       })
       .addCase(fetchContacts.fulfilled, (state, action) => {
         if (action.payload) {
+          state.status = 'idle';
           state.list = action.payload;
         }
       })
       .addCase(fetchContacts.rejected, (state) => {
         state.status = 'failed';
+      })
+
+      .addCase(deleteContact.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(deleteContact.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.status = 'idle';
+          state.list = state.list.filter(contact => contact.id !== action.payload)
+        }
+      })
+      .addCase(deleteContact.rejected, (state) => {
+        state.status = 'failed';
       });
     }
 });
 
-export const selectContactList = (state: RootState) => state.contact.list;
+export const selectContactList = (state: RootState) => state.contact.list; 
+export const selectContactStatus = (state: RootState) => state.contact.status;
 
 export default contactSlice.reducer;
