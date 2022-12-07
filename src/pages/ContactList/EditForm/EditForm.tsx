@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Form, Input, Modal } from 'antd';
-import { useAppSelector } from '../../../hook/hook';
-import { ContactItem, selectContactStatus } from '../../../redux/slices/contact/contactSlice';
+import { useAppSelector, useAppDispatch } from '../../../hook/hook';
+import { ContactItem, editContact, selectContactStatus } from '../../../redux/slices/contact/contactSlice';
 import { UserOutlined } from '@ant-design/icons';
 
 type EditFormValues = {
@@ -17,8 +17,15 @@ type Props = {
 
 const EditForm = ({ isEditFormVisible, hideEditForm, selectedContact }: Props) => {
   const status = useAppSelector(selectContactStatus);
+  const dispatch = useAppDispatch();
 
-  const onFinish = async () => {};
+  const onFinish = async ({ name, phone }: EditFormValues) => {
+    if (!selectedContact) return
+
+    await dispatch(editContact({ ...selectedContact, name, phone }))
+
+    hideEditForm()
+  };
 
   return (
     <Modal
