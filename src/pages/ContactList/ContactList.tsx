@@ -1,30 +1,41 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar, Button, List, Typography, Input } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../hook/hook';
-import { deleteContact, fetchContacts, selectContactList, selectContactStatus } from '../../redux/slices/contact/contactSlice';
+import {
+  deleteContact,
+  fetchContacts,
+  selectContactList,
+  selectContactStatus,
+} from '../../redux/slices/contact/contactSlice';
 
 import './ContactList.css';
+import AddForm from './AddForm/AddForm';
 
 const { Search } = Input;
 const { Title } = Typography;
 
 const ContactList: React.FC = () => {
-  const contactList = useAppSelector(selectContactList)
-  const status = useAppSelector(selectContactStatus)
+
+  const [isAddFormVisible, setIsAddFormVisible] = useState(false);
+
+  const contactList = useAppSelector(selectContactList);
+  const status = useAppSelector(selectContactStatus);
 
   const dispatch = useAppDispatch();
+
+  const showAddForm = () => setIsAddFormVisible(true);
+  const hideAddForm = () => setIsAddFormVisible(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log(event.target.value);
   };
 
   const handleDeletion = (id: string) => {
-    dispatch(deleteContact(id))
-  }
-
+    dispatch(deleteContact(id));
+  };
 
   useEffect(() => {
-    dispatch(fetchContacts())
+    dispatch(fetchContacts());
   }, [dispatch]);
 
   return (
@@ -45,20 +56,24 @@ const ContactList: React.FC = () => {
           <List.Item
             actions={[
               <Button key="list-loadmore-edit">edit</Button>,
-              <Button onClick={() => handleDeletion(contact.id)} key="list-loadmore-more" danger>delete</Button>,
+              <Button onClick={() => handleDeletion(contact.id)} key="list-loadmore-more" danger>
+                delete
+              </Button>,
             ]}
           >
             <List.Item.Meta
-              avatar={<Avatar className='avatar' src="https://picsum.photos/50/50" />}
+              avatar={<Avatar className="avatar" src="https://picsum.photos/50/50" />}
               title={contact.name}
               description={contact.phone}
             />
           </List.Item>
         )}
       />
-      <Button type="primary" className="add-btn">
+      <Button onClick={showAddForm} type="primary" className="add-btn">
         Добавить новый контакт
       </Button>
+
+      {isAddFormVisible && <AddForm isAddFormVisible={isAddFormVisible} hideAddForm={hideAddForm} />}
     </div>
   );
 };
