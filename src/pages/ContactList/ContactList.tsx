@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Button, List, Typography } from 'antd';
+import { Avatar, Button, List, Modal, Typography } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../hook/hook';
 import {
   ContactItem,
@@ -13,8 +13,10 @@ import EditForm from './EditForm/EditForm';
 import SearchForm from './SearchForm/SearchForm';
 
 import './ContactList.css';
+import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
+const { confirm } = Modal;
 
 const ContactList: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -39,7 +41,17 @@ const ContactList: React.FC = () => {
   const hideEditForm = () => setIsEditFormVisible(false);
 
   const handleDeletion = (id: string) => {
-    dispatch(deleteContact(id));
+    confirm({
+      title: 'Вы уверены?',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Изменения не обратить вспять',
+      onOk() {
+        dispatch(deleteContact(id))
+      },
+      onCancel() {},
+      cancelText: 'Отмена',
+      okText: 'Да'
+    })
   };
 
   useEffect(() => {
@@ -58,9 +70,11 @@ const ContactList: React.FC = () => {
         renderItem={(contact) => (
           <List.Item
             actions={[
-              <Button onClick={() => showEditForm(contact)} key="list-loadmore-edit">edit</Button>,
+              <Button onClick={() => showEditForm(contact)} key="list-loadmore-edit">
+                <EditOutlined />
+              </Button>,
               <Button onClick={() => handleDeletion(contact.id)} key="list-loadmore-more" danger>
-                delete
+                <DeleteOutlined />
               </Button>,
             ]}
           >
@@ -72,7 +86,12 @@ const ContactList: React.FC = () => {
           </List.Item>
         )}
       />
-      <Button onClick={showAddForm} type="primary" className="add-btn">
+      <Button 
+        icon={<PlusCircleOutlined />}
+        onClick={showAddForm} 
+        type="primary" 
+        className="add-btn"
+      >
         Добавить новый контакт
       </Button>
 
