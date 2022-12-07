@@ -1,31 +1,25 @@
 import { Avatar, Button, List, Typography, Input } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { CONTACTS_URL } from '../../utils/constants';
+import React, { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../hook/hook';
+import { fetchContacts, selectContactList } from '../../redux/slices/contact/contactSlice';
 
 import './ContactList.css';
 
 const { Search } = Input;
-
 const { Title } = Typography;
 
-type ContactItem = {
-  id: string;
-  name: string;
-  phone: string;
-};
-
 const ContactList: React.FC = () => {
-  const [contactList, setContactList] = useState<ContactItem[]>([]);
+  const contactList = useAppSelector(selectContactList)
+  const dispatch = useAppDispatch();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log(event.target.value);
   };
 
+
   useEffect(() => {
-    fetch(CONTACTS_URL)
-      .then((res) => res.json())
-      .then((res) => setContactList(res));
-  }, []);
+    dispatch(fetchContacts())
+  }, [dispatch]);
 
   return (
     <div className="contactList">
