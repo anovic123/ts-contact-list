@@ -1,12 +1,12 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { CONTACTS_URL } from "../../../utils/constants";
-import { RootState } from "../../store";
-
-export type ContactItem = {
-  id: string;
-  name: string;
-  phone: string;
-}
+import { createSlice } from '@reduxjs/toolkit';
+import { RootState } from "./../../store";
+import {
+  addContact,
+  ContactItem,
+  deleteContact,
+  editContact,
+  fetchContacts,
+} from './contactApi';
 
 export type ContactState = {
   list: ContactItem[];
@@ -18,64 +18,19 @@ const initialState: ContactState = {
   status: 'idle',
 }
 
-export const fetchContacts = createAsyncThunk(
-  "contact/fetchContacts",
-  async () => {
-    const response = await fetch(CONTACTS_URL);
-    return await response.json()
-  }
-)
-
-export const deleteContact = createAsyncThunk(
-  'contact/deleteContact',
-  async (id: string) => {
-    await fetch(`${CONTACTS_URL}/${id}`, {
-      method: 'DELETE'
-    })
-    return id;
-  }
-)
-
-export const addContact = createAsyncThunk(
-  'contact/addContact',
-  async (newContact: { name: string, phone: string }) => {
-    const response = await fetch(CONTACTS_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(newContact)
-    })
-    return await response.json()
-  }
-)
-
-export const editContact = createAsyncThunk(
-  'contact/editContact',
-  async (editedContact: ContactItem) => {
-    const response = await fetch(`${CONTACTS_URL}/${editedContact.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(editedContact)
-    })
-    return await response.json() as ContactItem
-  }
-)
-
 export const contactSlice = createSlice({
   name: 'contact',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
       builder
+      // cases for fetchings contacts
       .addCase(fetchContacts.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(fetchContacts.fulfilled, (state, action) => {
+        state.status = 'idle';
         if (action.payload) {
-          state.status = 'idle';
           state.list = action.payload;
         }
       })
@@ -83,49 +38,56 @@ export const contactSlice = createSlice({
         state.status = 'failed';
       })
 
+      // cases for deleting a single contact
       .addCase(deleteContact.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(deleteContact.fulfilled, (state, action) => {
+        state.status = 'idle';
         if (action.payload) {
-          state.status = 'idle';
-          state.list = state.list.filter(contact => contact.id !== action.payload)
+          state.list = state.list.filter(
+            (contact) => contact.id !== action.payload
+          )
         }
       })
       .addCase(deleteContact.rejected, (state) => {
         state.status = 'failed';
       })
 
+      // cases for adding a single contact
       .addCase(addContact.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(addContact.fulfilled, (state, action) => {
+        state.status = 'idle';
         if (action.payload) {
-          state.status = 'idle';
           state.list = [...state.list, action.payload]
         }
       })
       .addCase(addContact.rejected, (state) => {
-        state.status = 'failed';
+        state.status = 'failed'
       })
 
+      // cases for editing a single contact
       .addCase(editContact.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(editContact.fulfilled, (state, action) => {
         state.status = 'idle';
-        state.list = [...state.list].map((contact) => {
-          if (contact.id === action.payload.id) {
-            return action.payload
-          }
+        if (action.payload) {
+          state.list = state.list.map((contact) => {
+            if (contact.id === action.payload.id) {
+              return action.payload;
+            }
 
-          return contact
-        })
+            return contact;
+          });
+        }
       })
       .addCase(editContact.rejected, (state) => {
         state.status = 'failed';
-      })
-    }
+      });
+  },
 });
 
 export const selectContactList = (state: RootState) => state.contact.list; 

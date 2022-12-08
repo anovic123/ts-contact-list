@@ -2,12 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Avatar, Button, List, Modal, Typography } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../hook/hook';
 import {
-  ContactItem,
-  deleteContact,
-  fetchContacts,
   selectContactList,
   selectContactStatus,
 } from '../../redux/slices/contact/contactSlice';
+import { ContactItem, deleteContact, fetchContacts } from '../../redux/slices/contact/contactApi';
 import AddForm from './AddForm/AddForm';
 import EditForm from './EditForm/EditForm';
 import SearchForm from './SearchForm/SearchForm';

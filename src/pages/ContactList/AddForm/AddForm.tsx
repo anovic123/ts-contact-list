@@ -1,7 +1,8 @@
 import React from 'react';
 import { Button, Form, Input, Modal } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../../hook/hook';
-import { addContact, selectContactStatus } from '../../../redux/slices/contact/contactSlice';
+import { addContact } from '../../../redux/slices/contact/contactApi';
+import { selectContactStatus } from '../../../redux/slices/contact/contactSlice';
 import { UserOutlined } from '@ant-design/icons';
 
 type AddFormValue = {

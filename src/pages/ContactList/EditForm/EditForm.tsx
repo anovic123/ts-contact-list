@@ -1,7 +1,7 @@
-import React from 'react';
 import { Button, Form, Input, Modal } from 'antd';
 import { useAppSelector, useAppDispatch } from '../../../hook/hook';
-import { ContactItem, editContact, selectContactStatus } from '../../../redux/slices/contact/contactSlice';
+import { ContactItem, editContact } from '../../../redux/slices/contact/contactApi';
+import { selectContactStatus } from '../../../redux/slices/contact/contactSlice';
 import { UserOutlined } from '@ant-design/icons';
 
 type EditFormValues = {

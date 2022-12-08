@@ -1,6 +1,7 @@
 import { Form, Input } from 'antd';
-import { ContactItem, selectContactList } from '../../../redux/slices/contact/contactSlice';
 import { useAppSelector } from '../../../hook/hook';
+import { ContactItem } from '../../../redux/slices/contact/contactApi';
+import { selectContactList } from '../../../redux/slices/contact/contactSlice';
 
 import s from './Search.module.css';
 

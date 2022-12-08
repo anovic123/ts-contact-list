@@ -1,14 +1,15 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Alert, Button, Form, Input, Typography } from 'antd';
-import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hook/hook';
-import { logIn } from '../../redux/slices/auth/authSlice';
 import { 
-  fetchUsers, 
   selectUserStatus,
   selectUserError 
 } from '../../redux/slices/user/userSlice';
+import { fetchUsers } from '../../redux/slices/user/userApi';
+import { useNavigate } from 'react-router-dom';
 import { MyRoutes } from '../../utils/constants';
+import { logIn } from '../../redux/slices/auth/authSlice';
+
 import './Login.css';
 
 const { Title } = Typography;
