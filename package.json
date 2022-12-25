@@ -1,7 +1,6 @@
 {
   "name": "react-list-users",
   "version": "0.1.0",
-  "homepage": "https://anovic123.github.io/ts-redux-toolkit-contact-list",
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.8.0",
