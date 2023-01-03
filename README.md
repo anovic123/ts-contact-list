@@ -5,8 +5,9 @@
 ## Запуск проекта
 
 Выполнить следующие команды в терминале: сперва **npm install**, затем **npm start**  
-!Login: Amira
-!Password: 123
+
+Login: Amira
+Password: 123
 
 ## Библиотеки
 
